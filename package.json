@@ -18,7 +18,7 @@
     "doc": "npx compodoc -p tsconfig.json -d public",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
-    "test:watch": "jest --watch",
+    "test:watch": "jest --watchAll --coverage",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json"
@@ -60,17 +60,18 @@
     "typescript": "3.4.3"
   },
   "jest": {
+    "verbose": true,
+    "rootDir": "src",
+    "testRegex": ".spec.ts$",
+    "testEnvironment": "node",
+    "coverageDirectory": "../coverage",
     "moduleFileExtensions": [
       "js",
       "json",
       "ts"
     ],
-    "rootDir": "src",
-    "testRegex": ".spec.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    }
   }
 }
