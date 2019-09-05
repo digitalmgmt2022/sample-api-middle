@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"baseUrl": "./",
-		"target": "es2017",
+		"target": "esnext",
 		"outDir": "./dist",
 		"module": "commonjs",
 		"sourceMap": true,
@@ -11,6 +11,6 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 	},
-	"include": ["src/**/*"],
+	"include": ["src/**/*", "test/**/*"],
 	"exclude": ["node_modules", "dist"]
 }
