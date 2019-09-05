@@ -1,8 +1,10 @@
 import { Post, Get, Patch, Delete, Body } from '@nestjs/common';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Controller, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
+import { User } from '../../common/decorators/user.decorator';
 
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
@@ -21,21 +23,27 @@ export class UserController {
 
   @Get()
   @ApiBearerAuth()
-  async selectOne(@Body() payload: UserEntity): Promise<UserEntity> {
-    return await this.userService.selectOne(payload);
+  @UseGuards(AuthGuard('jwt'))
+  async selectOne(@User() payload: UserEntity): Promise<UserEntity> {
+    return await payload;
   }
 
   @Patch()
   @ApiBearerAuth()
-  async updateOne(@Body() payload: UserEntity): Promise<UserEntity> {
-    return await this.userService.updateOne(payload, payload).catch(() => {
+  @UseGuards(AuthGuard('jwt'))
+  async updateOne(
+    @User() user: UserEntity,
+    @Body() payload: UserEntity,
+  ): Promise<UserEntity> {
+    return await this.userService.updateOne(user, payload).catch(() => {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     });
   }
 
   @Delete()
   @ApiBearerAuth()
-  async deleteOne(@Body() payload: UserEntity): Promise<any> {
+  @UseGuards(AuthGuard('jwt'))
+  async deleteOne(@User() payload: UserEntity): Promise<any> {
     return await this.userService.deleteOne(payload).catch(() => {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     });
