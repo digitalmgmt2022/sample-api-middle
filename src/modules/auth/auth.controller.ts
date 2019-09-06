@@ -1,5 +1,5 @@
 import { Controller, UseGuards } from '@nestjs/common';
-import { Body, Post, Put } from '@nestjs/common';
+import { Body, Post, Patch } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
@@ -20,11 +20,11 @@ export class AuthController {
 
   @Post()
   async create(@Body() payload: UserEntity): Promise<any> {
-    await this.jwtStrategy.validate(payload);
-    return await this.authService.signIn(payload);
+    const user = await this.jwtStrategy.validate(payload);
+    return await this.authService.signIn(user);
   }
 
-  @Put()
+  @Patch()
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   async update(@User() payload: UserEntity): Promise<any> {

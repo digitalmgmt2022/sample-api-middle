@@ -29,6 +29,6 @@ export class UserService {
   }
 
   async deleteOne(user: UserEntity): Promise<DeleteResult> {
-    return await this.userRepository.delete(user.id);
+    return await this.userRepository.delete(user.login);
   }
 }

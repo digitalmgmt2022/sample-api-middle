@@ -5,7 +5,7 @@ import { IsString, MinLength, MaxLength } from 'class-validator';
 @Entity('User')
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  private id?: number;
 
   @IsString()
   @MaxLength(254)
@@ -33,12 +33,12 @@ export class UserEntity extends BaseEntity {
     default: () => 'CURRENT_TIMESTAMP',
     name: 'createAt',
   })
-  createAt: Date;
+  private createAt?: Date;
 
   @Column('datetime', {
     nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
     name: 'updateAt',
   })
-  updateAt: Date;
+  private updateAt: Date;
 }

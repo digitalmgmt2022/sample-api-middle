@@ -18,11 +18,11 @@ export class AuthService {
   async signIn(payload: UserEntity): Promise<any> {
     return {
       expiresIn: this.configService.get('JWT_EXPIRES_TIME'),
-      token: this.jwtService.sign(payload),
+      token: this.jwtService.sign({ ...payload }),
     };
   }
 
-  async validateUser(payload: UserEntity): Promise<any> {
+  async validateUser(payload: UserEntity): Promise<UserEntity> {
     const user = await this.userService.selectOne(payload);
     return await compare(payload.password, user.password).then(() => {
       return user;
