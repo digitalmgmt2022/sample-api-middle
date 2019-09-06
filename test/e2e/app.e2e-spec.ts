@@ -3,13 +3,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { Request } from '../helpers/request.helpers';
 import { GenerateUser, GenerateBadUser } from '../fixtures/user.fixtures';
+import { GeneratePhoto, GenerateBadPhoto } from '../fixtures/photo.fixtures';
 
-import { DatabaseModule } from '../../src/database/database.module';
-
-import { AuthModule } from '../../src/modules/auth/auth.module';
+import { AppModule } from '../../src/app/app.module';
 import { AuthService } from '../../src/modules/auth/auth.service';
-
-import { UserModule } from '../../src/modules/user/user.module';
 
 describe('', () => {
   let app: INestApplication;
@@ -19,9 +16,12 @@ describe('', () => {
   let generateUser = new GenerateUser();
   let generateBadUser = new GenerateBadUser();
 
+  let generatePhotos = new GeneratePhoto();
+  let generateBadPhotos = new GenerateBadPhoto();
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [DatabaseModule, AuthModule, UserModule],
+      imports: [AppModule],
     }).compile();
 
     app = module.createNestApplication().useGlobalPipes(new ValidationPipe());
@@ -111,9 +111,45 @@ describe('', () => {
 
       it('[200]: Create', async () => {
         const { body } = await request.patchAuth('/auth', 200);
-        return await request.setPasport(body)
+        return await request.setPasport(body);
       });
-    })
+    });
+  });
+
+  describe('Photo flow (api/photo):', () => {
+    describe('[POST]: Create', () => {
+      it('[401]: Unauthorized', async () => {
+        return await request.post('/photo', 401, generatePhotos);
+      });
+
+      it('[400]: Bad-Request', async () => {
+        return await request.postAuth('/photo', 400, generateBadPhotos);
+      });
+
+      it('[201]: Create', async () => {
+        return await request.postAuth('/photo', 201, generatePhotos);
+      });
+    });
+
+    describe('[Get]: Reflection many', () => {
+      it('[200]: OK', async () => {
+        return await request.getAuth('/photo', 200);
+      });
+    });
+
+    describe('[Get]: Reflection one', () => {
+      it('[401]: Unauthorized', async () => {
+        return await request.get('/photo/1', 401);
+      });
+
+      it('[404]: Not Found', async () => {
+        return await request.getAuth('/photo/16', 404);
+      });
+
+      it('[200]: OK', async () => {
+        return await request.getAuth('/photo/1', 200);
+      });
+    });
   });
 
   afterAll(async () => {
