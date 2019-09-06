@@ -29,7 +29,7 @@ async function bootstrap() {
     .setGlobalPrefix(config.get('API_PREFFIX'))
     .useGlobalPipes(new ValidationPipe())
     .enableCors()
-    .listen(config.get('API_PORT'));
+    .listen(config.get('PORT'));
 }
 
 bootstrap();
