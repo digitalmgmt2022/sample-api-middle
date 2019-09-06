@@ -1,6 +1,14 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsString, MinLength, MaxLength } from 'class-validator';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+} from 'typeorm';
+
+import { LikeEntity } from '../like/like.entity';
 
 @Entity('User')
 export class UserEntity extends BaseEntity {
@@ -27,6 +35,12 @@ export class UserEntity extends BaseEntity {
     name: 'password',
   })
   password: string;
+
+  @OneToMany(_type => LikeEntity, likes => likes.photo, {
+    nullable: true,
+    cascade: true,
+  })
+  likes: LikeEntity[];
 
   @Column('datetime', {
     nullable: false,
