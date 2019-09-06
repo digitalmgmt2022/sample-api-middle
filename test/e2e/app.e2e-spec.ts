@@ -16,7 +16,7 @@ describe('', () => {
   let generateUser = new GenerateUser();
   let generateBadUser = new GenerateBadUser();
 
-  let generatePhotos = new GeneratePhoto();
+  let generatePhotos = GeneratePhoto;
   let generateBadPhotos = new GenerateBadPhoto();
 
   beforeAll(async () => {
@@ -127,7 +127,9 @@ describe('', () => {
       });
 
       it('[201]: Create', async () => {
-        return await request.postAuth('/photo', 201, generatePhotos);
+        await generatePhotos.map(async (item) => {
+          return await request.postAuth('/photo', 201, item);
+        });
       });
     });
 
@@ -148,6 +150,30 @@ describe('', () => {
 
       it('[200]: OK', async () => {
         return await request.getAuth('/photo/1', 200);
+      });
+    });
+  });
+
+  describe('Like flow (api/like):', () => {
+    describe('[POST]: Create', () => {
+      it('[404]: Not Found', async () => {
+        return await request.post('/like', 404);
+      });
+
+      it('[401]: Unauthorized', async () => {
+        return await request.post('/like/1', 401);
+      });
+
+      it('[201]: Create 1-like', async () => {
+        return await request.postAuth('/like/1', 201);
+      });
+
+      it('[201]: Create 2-like', async () => {
+        return await request.postAuth('/like/2', 201);
+      });
+
+      it('[201]: Cancel 1-like', async () => {
+        return await request.postAuth('/like/1', 201);
       });
     });
   });
